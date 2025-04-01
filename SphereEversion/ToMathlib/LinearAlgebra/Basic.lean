@@ -15,7 +15,7 @@ variable {R : Type*} {R₂ : Type*} {M : Type*} {M₂ : Type*} [Semiring R] [Sem
 theorem Submodule.sup_eq_span_union (s t : Submodule R M) : s ⊔ t = span R (s ∪ t) := by
   rw [span_union, span_eq s, span_eq t]
 
--- WIP
+-- https://github.com/leanprover-community/mathlib4/pull/23532
 theorem Submodule.sup_eq_top_iff (s t : Submodule R M) :
     s ⊔ t = ⊤ ↔ ∀ m : M, ∃ u ∈ s, ∃ v ∈ t, m = u + v := by
   rw [eq_top_iff']
