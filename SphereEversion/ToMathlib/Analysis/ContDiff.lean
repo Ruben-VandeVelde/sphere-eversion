@@ -86,6 +86,7 @@ theorem LinearMap.coprod_comp_inl_inr {R : Type*} {M : Type*} {M₂ : Type*} {M�
     (f.comp (LinearMap.inl R M M₂)).coprod (f.comp (LinearMap.inr R M M₂)) = f := by
   rw [← LinearMap.comp_coprod, LinearMap.coprod_inl_inr, LinearMap.comp_id]
 
+
 -- PR to Topology.Algebra.Module.Basic
 @[simp]
 theorem ContinuousLinearMap.coprod_comp_inl_inr {R₁ : Type*} [Semiring R₁] {M₁ : Type*}
@@ -259,6 +260,7 @@ theorem contDiffAt_orthogonalProjection_singleton {v₀ : E} (hv₀ : v₀ ≠ 0
 
 end
 
+-- Mathlib.Analysis.Calculus.ContDiff.Operations
 section Arithmetic
 
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜] {E : Type*} [NormedAddCommGroup E]
@@ -279,6 +281,21 @@ theorem ContDiffOn.mul_const (hf : ContDiffOn 𝕜 n f s) {c : 𝔸} :
 
 theorem ContDiff.mul_const (hf : ContDiff 𝕜 n f) {c : 𝔸} : ContDiff 𝕜 n fun x : E ↦ f x * c :=
   hf.mul contDiff_const
+
+theorem ContDiffWithinAt.const_mul (hf : ContDiffWithinAt 𝕜 n f s x) {c : 𝔸} :
+    ContDiffWithinAt 𝕜 n (fun x : E ↦ c * f x) s x :=
+  contDiffWithinAt_const.mul hf
+
+theorem ContDiffAt.const_mul (hf : ContDiffAt 𝕜 n f x) {c : 𝔸} :
+    ContDiffAt 𝕜 n (fun x : E ↦ c * f x) x :=
+  contDiffAt_const.mul hf
+
+theorem ContDiffOn.const_mul (hf : ContDiffOn 𝕜 n f s) {c : 𝔸} :
+    ContDiffOn 𝕜 n (fun x : E ↦ c * f x) s :=
+  contDiffOn_const.mul hf
+
+theorem ContDiff.const_mul (hf : ContDiff 𝕜 n f) {c : 𝔸} : ContDiff 𝕜 n fun x : E ↦ c * f x :=
+  contDiff_const.mul hf
 
 end Arithmetic
 

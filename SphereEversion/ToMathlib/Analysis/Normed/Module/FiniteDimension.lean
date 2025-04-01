@@ -5,6 +5,7 @@ section
 variable (𝕜 E : Type*) {ι : Type*} [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace 𝕜] [Finite ι]
 
+-- https://github.com/leanprover-community/mathlib4/pull/23528
 theorem isOpen_affineIndependent : IsOpen {p : ι → E | AffineIndependent 𝕜 p} := by
   classical
   rcases isEmpty_or_nonempty ι with h | ⟨⟨i₀⟩⟩
