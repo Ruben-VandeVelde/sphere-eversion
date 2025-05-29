@@ -9,6 +9,7 @@ open Submodule Function Set Filter
 section GeneralStuff
 
 -- Things in this section go to other files
+-- Mathlib.LinearAlgebra.Span.Defs
 @[simp]
 theorem forall_mem_span_singleton {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M]
     [Module R M] (P : M → Prop) (u : M) : (∀ x ∈ span R ({u} : Set M), P x) ↔ ∀ t : R, P (t • u) := by
@@ -16,8 +17,9 @@ theorem forall_mem_span_singleton {R : Type*} [CommRing R] {M : Type*} [AddCommG
 
 open scoped Pointwise
 
+-- Mathlib.Algebra.GroupWithZero.Units.Basic
 @[simp]
-theorem Field.exists_unit {𝕜 : Type*} [Field 𝕜] (P : 𝕜 → Prop) :
+theorem GroupWithZero.exists_unit {𝕜 : Type*} [GroupWithZero 𝕜] (P : 𝕜 → Prop) :
     (∃ u : 𝕜ˣ, P u) ↔ ∃ u : 𝕜, u ≠ 0 ∧ P u := by
   constructor
   · rintro ⟨u, hu⟩
@@ -25,29 +27,25 @@ theorem Field.exists_unit {𝕜 : Type*} [Field 𝕜] (P : 𝕜 → Prop) :
   · rintro ⟨u, u_ne, hu⟩
     exact ⟨Units.mk0 u u_ne, hu⟩
 
+-- Mathlib.LinearAlgebra.Basis.VectorSpace
 theorem span_singleton_eq_span_singleton_of_ne {𝕜 : Type*} [Field 𝕜] {M : Type*} [AddCommGroup M]
     [Module 𝕜 M] {u v : M} (hu : u ≠ 0) (hu' : u ∈ span 𝕜 ({v} : Set M)) :
     span 𝕜 ({u} : Set M) = span 𝕜 ({v} : Set M) := by
   rcases mem_span_singleton.mp hu' with ⟨a, rfl⟩
-  by_cases hv : v = 0
-  · subst hv
-    simp
-  have : a ≠ 0 := by
-    rintro rfl
-    exact hu (zero_smul 𝕜 v)
   symm
-  erw [Submodule.span_singleton_eq_span_singleton, Field.exists_unit fun z : 𝕜 ↦ z • v = a • v]
-  use a, this
+  simp_rw [Submodule.span_singleton_eq_span_singleton, Units.smul_def,
+    GroupWithZero.exists_unit fun z : 𝕜 ↦ z • v = a • v]
+  use a, left_ne_zero_of_smul hu
 
 end GeneralStuff
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] --[CompleteSpace E]
 
+@[deprecated EmbeddingLike.map_ne_zero_iff (since := "2025-05-28")]
 theorem LinearIsometryEquiv.apply_ne_zero {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] (φ : E ≃ₗᵢ⋆[ℝ] F)
     {x : E} (hx : x ≠ 0) : φ x ≠ 0 := by
-  refine fun H ↦ hx ?_
-  rw [← φ.symm_apply_apply x, H, φ.symm.map_zero]
+  rwa [EmbeddingLike.map_ne_zero_iff]
 
 /-- The line (one-dimensional submodule of `E`) spanned by `x : E`. -/
 @[reducible] def spanLine (x : E) : Submodule ℝ E := Submodule.span ℝ ({x} : Set E)
